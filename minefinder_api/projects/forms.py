@@ -6,8 +6,8 @@ from django.contrib.gis.geos import Point
 class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
-        fields = ['title', 'description', 'location','project_stage','estimated_resources','resource_type','exploration_upside',
-                 'regional_deposits','ownership','permit_type','permit_number','date_posted', 'latitude', 'longitude' ] 
+        fields = ['title', 'description', 'project_type','location','location_desc', 'latitude', 'longitude', 'project_stage','estimated_resources','resource_type','exploration_upside',
+                 'regional_deposits','ownership','permit_type','permit_number','date_posted', 'main_commodity','other_commodities', 'seller','public_fields'  ] 
 
     latitude = forms.FloatField()
     longitude = forms.FloatField()

@@ -18,10 +18,15 @@ from django.contrib import admin
 from django.urls import path,include
 from projects.api import views as projects_api_views
 from users.api import views as users_api_views
+from django.conf.urls.static import static
+from django.conf import settings
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('auth/users/', users_api_views.UserList.as_view() ),
+    path('user/', include('users.urls') ),
+    path('message/', include('message_control.urls')),
     path('api/projects/', projects_api_views.ProjectList.as_view()),
+    path('api/projects/<int:pk>', projects_api_views.ProjectDetail.as_view()),
+    #path('users/register', users_api_views.RegisterView.as_view()),
    
-]
+]+ static(settings.STATIC_URL, document_root=settings.STATIC_ROOT) + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

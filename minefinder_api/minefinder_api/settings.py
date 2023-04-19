@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/4.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from decouple import config
 if os.name == 'nt':
     VENV_BASE = os.environ['VIRTUAL_ENV']
     os.environ['PATH'] = os.path.join(
@@ -28,12 +28,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-l9(2%^*w!o*ixo-()(2k0+)@dyvj6$bqc%qp+t8!b*%3p29gt-'
+#SECRET_KEY = 'django-insecure-l9(2%^*w!o*ixo-()(2k0+)@dyvj6$bqc%qp+t8!b*%3p29gt-'
+SECRET_KEY = '10y83$&yi^2_g_y*r^eeabge40t&0ioyd9=m-4h-sc!0aq4rjm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -51,9 +52,10 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_gis',
     'corsheaders',
-
     'projects.apps.ProjectsConfig',
     'users.apps.UsersConfig',
+    'chatapi',
+    'message_control'
 ]
 
 MIDDLEWARE = [
@@ -94,7 +96,7 @@ WSGI_APPLICATION = 'minefinder_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'minefinder',
+        'NAME': 'minefinder_db',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': 'localhost',
@@ -137,23 +139,48 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 
-STATIC_URL = '/static/'
-
-MEDIA_URL = '/media/'
+STATIC_URL = 'static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'static_root', 'static')
+MEDIA_URL = 'media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
-
+SITE_URL  = "http://127.0.0.1:8000"
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.IsAuthenticated',
+        #'rest_framework.permissions.IsAuthenticated',
+       # 'minefinder_api.custom_methods.IsAuthenticatedCustom'
     ],
     
+    "DEFAULT_AUTHENTICATION_CLASSES": ("users.authentication.Authentication", ),
+    'EXCEPTION_HANDLER': 'minefinder_api.custom_methods.custom_exception_handler',
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 20,
 }
+
+CORS_ORIGIN_ALLOW_ALL = True
+CORS_ALLOW_HEADERS = (
+    'x-requested-with',
+    'content-type',
+    'accept',
+    'origin',
+    'authorization',
+    'accept-encoding',
+    'x-csrftoken',
+    'access-control-allow-origin',
+    'content-disposition'
+)
+CORS_ALLOW_CREDENTIALS = False
+CORS_ALLOW_METHODS = ('GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS')    
+
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-AUTH_USER_MODEL = 'users.USER'
+AUTH_USER_MODEL = 'users.User'
 
 CORS_ALLOW_ALL_ORIGINS = True
+SOCKET_SERVER = config('SOCKET_SERVER' , default="localhost:9000/server")
+
+
+

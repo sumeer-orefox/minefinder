@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 # from .forms import UserCreationForm, UserChangeForm
-from .models import User
+from .models import User, Jwt, Favorite
 
 
 class UserAdmin(UserAdmin):
@@ -25,4 +25,4 @@ class UserAdmin(UserAdmin):
     ordering = ('email',)
 
 
-admin.site.register(User)
+admin.site.register((User,Jwt,Favorite))

@@ -14,12 +14,16 @@ class UserManager(BaseUserManager):
         if not email:
             raise ValueError(_('The Email must be set'))
         email = self.normalize_email(email)
+        email = email.lower()
         user = self.model(email=email, **extra_fields)
+        user.is_buyer = True
+        user.is_active = True
+        
         user.set_password(password)
         user.save()
         return user
-    def create_seller(self, email, name, password=None):
-        user = self.create_user(email, name, password)
+    def create_seller(self, email, password, **extra_fields):
+        user = self.create_user(email, password,**extra_fields)
 
         user.is_seller = True
         user.is_buyer = False
@@ -27,8 +31,8 @@ class UserManager(BaseUserManager):
         user.save(using=self._db)
 
         return user
-    def create_seller_buyer(self, email, name, password=None):
-        user = self.create_user(email, name, password)
+    def create_seller_buyer(self, email, password, **extra_fields):
+        user = self.create_user(email, password,**extra_fields)
 
         user.is_seller = True
         user.is_buyer = True
