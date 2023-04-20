@@ -57,7 +57,7 @@ class UserProfile(models.Model):
     caption = models.CharField(max_length=250,null=True, blank=True)
     company = models.CharField(max_length=50,null=True, blank=True)
     job_title = models.CharField(max_length=100,null=True, blank=True)
-    contact_no = models.PositiveIntegerField(null=True, blank=True)
+    contact_no = models.CharField(max_length=40,null=True, blank=True)
     bio = models.TextField(null=True, blank=True)
     profile_picture = models.ForeignKey(
         GenericFileUpload, related_name="user_image", on_delete=models.SET_NULL, null=True)
@@ -65,10 +65,12 @@ class UserProfile(models.Model):
     date_updated = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return self.user.email
+        return self.email
 
     class Meta:
         ordering = ("date_joined",)    
+    def label_from_instance(self):
+         return self.email
 
 class Favorite(models.Model):
     user = models.OneToOneField(User, related_name="user_favorites", on_delete=models.CASCADE)

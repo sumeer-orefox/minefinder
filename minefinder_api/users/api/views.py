@@ -291,6 +291,8 @@ class MeView(APIView):
             data = self.serializer_class(request.user.user_profile).data
             data['profile_picture']['file_upload'] = settings.SITE_URL+data['profile_picture']['file_upload'] 
             print("data me",data['profile_picture']['file_upload'])
+            print("data contact",data['contact_no'])
+           # data['contact_no'] = str(data['contact_no'])
         except Exception:
             data = {
                 "user": {

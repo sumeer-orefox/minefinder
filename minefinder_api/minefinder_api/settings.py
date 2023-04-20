@@ -96,7 +96,7 @@ WSGI_APPLICATION = 'minefinder_api.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.contrib.gis.db.backends.postgis',
-        'NAME': 'minefinder_db',
+        'NAME': 'minefinder',
         'USER': 'postgres',
         'PASSWORD': 'root',
         'HOST': 'localhost',

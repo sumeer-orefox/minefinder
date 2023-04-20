@@ -38,25 +38,34 @@ class Project(models.Model):
         
     )
     title = models.CharField(max_length=255)
-    slug = models.SlugField(unique=True)
     description = models.TextField(blank=True, null=True)
     location = models.PointField(srid=4326)  # SRID for WGS84
     location_desc = models.CharField(max_length=200,blank=True, null=True)
     project_stage = models.CharField(max_length=13, choices=PROJECT_STAGES,default='UP')
     estimated_resources = models.DecimalField(max_digits=10, decimal_places=2)
-    resource_type = models.CharField(max_length=12, choices=RESOURCE_TYPE,default='INDICATED')
+    resource_type = models.CharField(max_length=22, choices=RESOURCE_TYPE,default='INDICATED')
     exploration_upside = models.TextField(blank=True, null=True)
     regional_deposits = models.TextField(blank=True, null=True)
     ownership = models.TextField(blank=True, null=True)
-    permit_type = models.CharField(max_length=14, choices=PERMIT_TYPE,default='EPM')
+    permit_type = models.CharField(max_length=24, choices=PERMIT_TYPE,default='EPM')
     permit_number = models.CharField(max_length=200,blank=True, null=True)
     main_commodity = models.CharField(max_length=200,blank=True, null=True)
     other_commodities = models.TextField(blank=True, null=True)
     project_type = models.CharField(max_length=13, choices=PROJECT_TYPE, default="BF")
     date_posted = models.DateTimeField(default=timezone.now)
     seller = models.ForeignKey(User, on_delete=models.CASCADE)
-    public_fields = ArrayField(models.BooleanField(default=False), default=list, blank=True)
-
+    public_fields = ArrayField(models.BooleanField(default=False), default=list, blank=True, null=True)
 
     def __str__(self):
         return self.title
+    def label_from_instance(self, obj):
+        """
+        Convert objects into strings and generate the labels for the choices
+        presented by this object. Subclasses can override this method to
+        customize the display of the choices.
+        """
+        print("obj2",obj)
+        return str(obj)
+    class Meta:
+        ordering = ("date_posted",)    
+    
